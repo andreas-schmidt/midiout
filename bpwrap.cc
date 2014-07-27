@@ -12,7 +12,7 @@ BOOST_PYTHON_MODULE(MIDIout)
 	.def("noteoff", &MIDIout::noteoff)
 	.def("controller", &MIDIout::controller)
 	.def("pgmchange", &MIDIout::pgmchange)
-	.def("sysex", &MIDIout::sysex)
+//	.def("sysex", &MIDIout::sysex)
     ;
 }
 
