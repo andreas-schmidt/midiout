@@ -1,0 +1,2 @@
+LDLIBS := -lasound
+CC := gcc
