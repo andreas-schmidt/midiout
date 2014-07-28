@@ -17,7 +17,7 @@ namespace alsaseq
 		Event();
 		~Event();
 
-		snd_seq_event_t* get();
+		snd_seq_event_t* get() const;
 
 		void clear();
 		void set_source(Port);
@@ -40,7 +40,7 @@ namespace alsaseq
 		Sequencer();
 		~Sequencer();
 
-		snd_seq_t* get();
+		snd_seq_t* get() const;
 
 		void set_client_name(std::string const&);
 		Port create_simple_port(std::string const&);

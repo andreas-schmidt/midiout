@@ -1,6 +1,6 @@
 CC := gcc
 CXX := g++
-CXXFLAGS := -fPIC
+CXXFLAGS := -fPIC -std=c++0x
 LDLIBS := -lasound
 
 main: MIDIout.o main.o
