@@ -1,14 +1,16 @@
 CC := gcc
 CXX := g++
-CXXFLAGS := -fPIC -std=c++0x
+CXXFLAGS := -fPIC -std=c++0x -I/usr/include/python2.7
 LDLIBS := -lasound
+
+alsaseq.so: pyalsaseq.o alsaseq.o
+	$(CXX) -o $@ -shared $^ $(LDLIBS) -lpython2.7 -lboost_python
 
 main: MIDIout.o main.o
 	$(CXX) $^ $(LDLIBS) -o $@
 
-bpwrap.o: bpwrap.cc
-	$(CXX) $(CXXFLAGS) -I/usr/include/python2.7 -c $<
+MIDIout.so: MIDIout.o bpwrap.o alsaseq.o
+	$(CXX) -o $@ -shared $^ $(LDLIBS) -lpython2.7 -lboost_python
 
-MIDIout.so: MIDIout.o bpwrap.o
-	$(CXX) -o$@ -shared $^ $(LDLIBS) -lpython2.7 -lboost_python
-
+clean:
+	rm -f *.so *.o
