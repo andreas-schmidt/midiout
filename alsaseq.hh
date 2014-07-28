@@ -1,8 +1,15 @@
 #pragma once
 
+#include <string>
+#include <alsa/asoundlib.h>
+
 namespace alsaseq
 {
-	class Port{int port};
+	class Port
+	{
+	public:
+		int port;
+	};
 
 	class Event
 	{
@@ -17,6 +24,12 @@ namespace alsaseq
 		void set_subs();
 		void set_direct();
 
+		void set_noteon(int channel, int key, int velocity);
+		void set_noteoff(int channel, int key, int velocity);
+		void set_controller(int channel, int controller, int value);
+		void set_pgmchange(int channel, int value);
+		void set_sysex(std::string const& data);
+
 	private:
 		snd_seq_event_t* ev;
 	};
@@ -24,8 +37,8 @@ namespace alsaseq
 	class Sequencer
 	{
 	public:
-		Client();
-		~Client();
+		Sequencer();
+		~Sequencer();
 
 		snd_seq_t* get();
 
