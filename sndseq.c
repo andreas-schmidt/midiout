@@ -145,6 +145,21 @@ Event_set_pgmchange(Event* self, PyObject* args)
 	return Py_None;
 }
 
+static PyObject*
+Event_set_sysex(Event* self, PyObject* args)
+{
+	char* data;
+	int len;
+
+	if (!PyArg_ParseTuple(args, "s#", &data, &len))
+		return NULL;
+
+	snd_seq_ev_set_sysex(&self->ev, len, data);
+	
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static PyMethodDef Event_methods[] = {
 	{"clear", (PyCFunction)Event_clear,
 		METH_NOARGS,
@@ -178,12 +193,11 @@ static PyMethodDef Event_methods[] = {
 		METH_VARARGS,
 		NULL
 	},
-/*
 	{"set_sysex", (PyCFunction)Event_set_sysex,
 		METH_VARARGS,
-		NULL
+		"CAUTION: the given data string must not go out of scope\n"
+		"         until Sequencer.drain_output has been called!\n"
 	},
-*/
 	{NULL}
 };
 
