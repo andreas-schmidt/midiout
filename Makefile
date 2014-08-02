@@ -12,5 +12,8 @@ main: MIDIout.o main.o
 MIDIout.so: MIDIout.o bpwrap.o alsaseq.o
 	$(CXX) -o $@ -shared $^ $(LDLIBS) -lpython2.7 -lboost_python
 
+sndseq.so: sndseq.c
+	$(CC) -o $@ -fPIC -shared $(shell python-config --cflags --ldflags) -lasound $^
+
 clean:
 	rm -f *.so *.o
