@@ -246,9 +246,9 @@ Sequencer_create_simple_port(Sequencer* self, PyObject* args)
 static PyObject*
 Sequencer_event_output(Sequencer* self, PyObject* args)
 {
-	Event* event = NULL;
+	Event* event;
 
-	if (!PyArg_ParseTuple(args, "O!", &EventType, event))
+	if (!PyArg_ParseTuple(args, "O!", &EventType, &event))
 		return NULL;
 
 	snd_seq_event_output(self->seq, &event->ev);
