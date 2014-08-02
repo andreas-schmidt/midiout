@@ -93,7 +93,6 @@ static PyObject *
 Sequencer_set_client_name(Sequencer* self, PyObject* args)
 {
 	const char *name;
-
 	if (!PyArg_ParseTuple(args, "s", &name))
 		return NULL;
 
@@ -104,21 +103,48 @@ Sequencer_set_client_name(Sequencer* self, PyObject* args)
 }
 
 static PyObject *
-Sequencer_create_simple_port(Sequencer* self)
+Sequencer_create_simple_port(Sequencer* self, PyObject* args)
 {
+	const char* name;
+	if (!PyArg_ParseTuple(args, "s", &name))
+		return NULL;
+
  	Port* p;
 	p = (Port*)PortType.tp_alloc(&PortType, 0);
 
 	if (p != NULL) {
 		p->port = snd_seq_create_simple_port(
 			self->seq,
-			"testport",
+			name,
 			SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
 			SND_SEQ_PORT_TYPE_MIDI_GENERIC
 		);
 	}
 
 	return (PyObject*)p;
+}
+
+static PyObject*
+Sequencer_event_output(Sequencer* self, PyObject* args)
+{
+	Event* event = NULL;
+
+	if (!PyArg_ParseTuple(args, "O!", &EventType, event))
+		return NULL;
+
+	snd_seq_event_output(self->seq, &event->ev);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Sequencer_drain_output(Sequencer* self)
+{
+	snd_seq_drain_output(self->seq);
+
+	Py_INCREF(Py_None);
+	return Py_None;
 }
 
 static PyMethodDef Sequencer_methods[] = {
@@ -129,8 +155,18 @@ static PyMethodDef Sequencer_methods[] = {
 	},
 	{"create_simple_port",
 		(PyCFunction)Sequencer_create_simple_port,
-		METH_NOARGS,
+		METH_VARARGS,
 		"snd_seq_create_simple_port"
+	},
+	{"event_output",
+		(PyCFunction)Sequencer_event_output,
+		METH_VARARGS,
+		"snd_seq_event_output"
+	},
+	{"drain_output",
+		(PyCFunction)Sequencer_drain_output,
+		METH_NOARGS,
+		"snd_seq_drain_output"
 	},
 	{NULL}
 };
