@@ -90,6 +90,20 @@ Sequencer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 static PyObject *
+Sequencer_set_client_name(Sequencer* self, PyObject* args)
+{
+	const char *name;
+
+	if (!PyArg_ParseTuple(args, "s", &name))
+		return NULL;
+
+	snd_seq_set_client_name(self->seq, name);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject *
 Sequencer_create_simple_port(Sequencer* self)
 {
  	Port* p;
@@ -108,6 +122,11 @@ Sequencer_create_simple_port(Sequencer* self)
 }
 
 static PyMethodDef Sequencer_methods[] = {
+	{"set_client_name",
+		(PyCFunction)Sequencer_set_client_name,
+		METH_VARARGS,
+		"snd_seq_set_client_name"
+	},
 	{"create_simple_port",
 		(PyCFunction)Sequencer_create_simple_port,
 		METH_NOARGS,
