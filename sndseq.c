@@ -81,7 +81,7 @@ Sequencer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     Sequencer *self;
 
-    self = (Sequencer *)type->tp_alloc(type, 0);
+    self = (Sequencer*)type->tp_alloc(type, 0);
     if (self != NULL) {
 	    snd_seq_open(&self->seq, "default", SND_SEQ_OPEN_OUTPUT, 0);
     }
@@ -92,17 +92,19 @@ Sequencer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyObject *
 Sequencer_create_simple_port(Sequencer* self)
 {
-//	PyObject* result;
-	int port;
+ 	Port* p;
+	p = (Port*)PortType.tp_alloc(&PortType, 0);
 
-	port = snd_seq_create_simple_port(
-		self->seq,
-		"testport",
-		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
-		SND_SEQ_PORT_TYPE_MIDI_GENERIC
-	);
+	if (p != NULL) {
+		p->port = snd_seq_create_simple_port(
+			self->seq,
+			"testport",
+			SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
+			SND_SEQ_PORT_TYPE_MIDI_GENERIC
+		);
+	}
 
-	return Py_BuildValue("i", port);
+	return (PyObject*)p;
 }
 
 static PyMethodDef Sequencer_methods[] = {
