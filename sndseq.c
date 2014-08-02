@@ -52,6 +52,103 @@ typedef struct {
 	snd_seq_event_t ev;
 } Event;
 
+static PyObject*
+Event_clear(Event* self, PyObject* args)
+{
+	snd_seq_ev_clear(&self->ev);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_source(Event* self, PyObject* args)
+{
+	Port* p;
+
+	if (!PyArg_ParseTuple(args, "O!", &PortType, &p))
+		return NULL;
+
+	snd_seq_ev_set_source(&self->ev, p->port);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_subs(Event* self, PyObject* args)
+{
+	snd_seq_ev_set_subs(&self->ev);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_direct(Event* self, PyObject* args)
+{
+	snd_seq_ev_set_direct(&self->ev);
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_noteon(Event* self, PyObject* args)
+{
+	int channel, key, velocity;
+	if (!PyArg_ParseTuple(args, "iii", &channel, &key, &velocity))
+		return NULL;
+
+	snd_seq_ev_set_noteon(&self->ev, channel, key, velocity);
+	
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyMethodDef Event_methods[] = {
+	{"clear", (PyCFunction)Event_clear,
+		METH_NOARGS,
+		NULL
+	},
+	{"set_source", (PyCFunction)Event_set_source,
+		METH_VARARGS,
+		NULL
+	},
+	{"set_subs", (PyCFunction)Event_set_subs,
+		METH_NOARGS,
+		NULL
+	},
+	{"set_direct", (PyCFunction)Event_set_direct,
+		METH_NOARGS,
+		NULL
+	},
+	{"set_noteon", (PyCFunction)Event_set_noteon,
+		METH_VARARGS,
+		NULL
+	},
+/*
+	{"set_noteoff", (PyCFunction)Event_set_noteoff,
+		METH_VARARGS,
+		NULL
+	},
+	{"set_controller", (PyCFunction)Event_set_controller,
+		METH_VARARGS,
+		NULL
+	},
+	{"set_pgmchange", (PyCFunction)Event_set_pgmchange,
+		METH_VARARGS,
+		NULL
+	},
+	{"set_sysex", (PyCFunction)Event_set_sysex,
+		METH_VARARGS,
+		NULL
+	},
+*/
+	{NULL}
+};
+
+
 static PyTypeObject EventType = {
 	PyObject_HEAD_INIT(NULL)
 	0,                             /*ob_size*/
@@ -75,6 +172,14 @@ static PyTypeObject EventType = {
 	0,                             /*tp_as_buffer*/
 	Py_TPFLAGS_DEFAULT,            /*tp_flags*/
 	"wrapper for snd_seq_event_t", /* tp_doc */
+	0,                             /* tp_traverse */
+	0,                             /* tp_clear */
+	0,                             /* tp_richcompare */
+	0,                             /* tp_weaklistoffset */
+	0,                             /* tp_iter */
+	0,                             /* tp_iternext */
+	Event_methods,                 /* tp_methods */
+	0,                             /* tp_members */
 };
 
 /* -- ALSA sequencer -------------------------------------------------------- */
