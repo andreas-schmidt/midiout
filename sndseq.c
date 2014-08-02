@@ -1,4 +1,5 @@
 #include <Python.h>
+#include "structmember.h"
 #include <alsa/asoundlib.h>
 
 /* -- ALSA sequencer port --------------------------------------------------- */
@@ -6,6 +7,11 @@ typedef struct {
 	PyObject_HEAD
 	int port;
 } Port;
+
+static PyMemberDef Port_members[] = {
+	{"port", T_INT, offsetof(Port, port), READONLY, "port number"},
+	{NULL}
+};
 
 static PyTypeObject PortType = {
 	PyObject_HEAD_INIT(NULL)
@@ -30,6 +36,14 @@ static PyTypeObject PortType = {
 	0,                           /*tp_as_buffer*/
 	Py_TPFLAGS_DEFAULT,          /*tp_flags*/
 	"wrapper for snd_seq port",  /* tp_doc */
+	0,                           /* tp_traverse */
+	0,                           /* tp_clear */
+	0,                           /* tp_richcompare */
+	0,                           /* tp_weaklistoffset */
+	0,                           /* tp_iter */
+	0,                           /* tp_iternext */
+	0,                           /* tp_methods */
+	Port_members,                /* tp_members */
 };
 
 /* -- ALSA sequencer event -------------------------------------------------- */
