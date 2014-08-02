@@ -89,6 +89,31 @@ Sequencer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     return (PyObject *)self;
 }
 
+static PyObject *
+Sequencer_create_simple_port(Sequencer* self)
+{
+//	PyObject* result;
+	int port;
+
+	port = snd_seq_create_simple_port(
+		self->seq,
+		"testport",
+		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
+		SND_SEQ_PORT_TYPE_MIDI_GENERIC
+	);
+
+	return Py_BuildValue("i", port);
+}
+
+static PyMethodDef Sequencer_methods[] = {
+	{"create_simple_port",
+		(PyCFunction)Sequencer_create_simple_port,
+		METH_NOARGS,
+		"snd_seq_create_simple_port"
+	},
+	{NULL}
+};
+
 static PyTypeObject SequencerType = {
 	PyObject_HEAD_INIT(NULL)
 	0,                             /* ob_size */
@@ -118,7 +143,7 @@ static PyTypeObject SequencerType = {
 	0,                             /* tp_weaklistoffset */
 	0,                             /* tp_iter */
 	0,                             /* tp_iternext */
-	0,                             /* tp_methods */
+	Sequencer_methods,             /* tp_methods */
 	0,                             /* tp_members */
 	0,                             /* tp_getset */
 	0,                             /* tp_base */

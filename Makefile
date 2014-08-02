@@ -3,6 +3,8 @@ CXX := g++
 CXXFLAGS := -fPIC -std=c++0x -I/usr/include/python2.7
 LDLIBS := -lasound
 
+default: sndseq.so
+
 alsaseq.so: pyalsaseq.o alsaseq.o
 	$(CXX) -o $@ -shared $^ $(LDLIBS) -lpython2.7 -lboost_python
 
