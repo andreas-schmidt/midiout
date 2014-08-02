@@ -106,6 +106,45 @@ Event_set_noteon(Event* self, PyObject* args)
 	return Py_None;
 }
 
+static PyObject*
+Event_set_noteoff(Event* self, PyObject* args)
+{
+	int channel, key, velocity;
+	if (!PyArg_ParseTuple(args, "iii", &channel, &key, &velocity))
+		return NULL;
+
+	snd_seq_ev_set_noteoff(&self->ev, channel, key, velocity);
+	
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_controller(Event* self, PyObject* args)
+{
+	int channel, controller, value;
+	if (!PyArg_ParseTuple(args, "iii", &channel, &controller, &value))
+		return NULL;
+
+	snd_seq_ev_set_controller(&self->ev, channel, controller, value);
+	
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static PyObject*
+Event_set_pgmchange(Event* self, PyObject* args)
+{
+	int channel, value;
+	if (!PyArg_ParseTuple(args, "ii", &channel, &value))
+		return NULL;
+
+	snd_seq_ev_set_pgmchange(&self->ev, channel, value);
+	
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static PyMethodDef Event_methods[] = {
 	{"clear", (PyCFunction)Event_clear,
 		METH_NOARGS,
@@ -127,7 +166,6 @@ static PyMethodDef Event_methods[] = {
 		METH_VARARGS,
 		NULL
 	},
-/*
 	{"set_noteoff", (PyCFunction)Event_set_noteoff,
 		METH_VARARGS,
 		NULL
@@ -140,6 +178,7 @@ static PyMethodDef Event_methods[] = {
 		METH_VARARGS,
 		NULL
 	},
+/*
 	{"set_sysex", (PyCFunction)Event_set_sysex,
 		METH_VARARGS,
 		NULL
