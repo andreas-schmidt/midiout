@@ -1,4 +1,4 @@
-import alsaseq
+import sndseq as alsaseq
 
 class MIDIout(object):
     def __init__(self, client_name, port_name):
