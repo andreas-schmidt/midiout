@@ -1,4 +1,4 @@
 MIDIout: python module to generate MIDI events via the ALSA sequencer API
 
-Besides that, I wanted to try different methods of wrapping native C code for python use. Comments and suggestions are welcome!
+Comments and suggestions are welcome!
 
