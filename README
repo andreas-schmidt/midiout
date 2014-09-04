@@ -1,4 +1,11 @@
 MIDIout: python module to generate MIDI events via the ALSA sequencer API
 
+TODOs:
+- add a usage example
+- get rid of the Makefile, use setup.py instead
+- docstrings
+- how can this be unit-tested?
+- handle the string ownership issue with the sysex
+
 Comments and suggestions are welcome!
 
