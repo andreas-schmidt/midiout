@@ -1,0 +1,5 @@
+- usage example
+- get rid of the Makefile, use setup.py instead
+- docstrings
+- how can this be unit-tested?
+- handle the string ownership issue with the sysex
